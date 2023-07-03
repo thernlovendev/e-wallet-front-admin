@@ -53,6 +53,5 @@ export default function LineChart ({labels, datasets}) {
         <div style={{width : "100%", padding : "10px"}} >
             <Line options={options} data={data} />
         </div>
-        
     )
 }

@@ -837,7 +837,7 @@
   export function getTransactions () {
     return(
       new Promise (async (res, rej) => {
-        fetch("http://localhost:4242/getTransactions", {
+        fetch("https://radiant-gorge-42555.herokuapp.com/getTransactions", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -861,7 +861,7 @@
   export function getDashData () {
     return (
       new Promise (async (res, rej) => {
-        fetch("http://localhost:4242/getDashData", {
+        fetch("https://radiant-gorge-42555.herokuapp.com/getDashData", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -885,7 +885,7 @@
   export function getUsers () {
     return (
       new Promise (async (res, rej) => {
-        fetch("http://localhost:4242/getUsers", {
+        fetch("https://radiant-gorge-42555.herokuapp.com/getUsers", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -912,7 +912,7 @@
     }
     return (
       new Promise (async (res, rej) => {
-        fetch("http://localhost:4242/getDataUser", {
+        fetch("https://radiant-gorge-42555.herokuapp.com/getDataUser", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -939,7 +939,7 @@
     }
     return (
       new Promise (async (res, rej) => {
-        fetch("http://localhost:4242/freezeUser", {
+        fetch("https://radiant-gorge-42555.herokuapp.com/freezeUser", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -966,12 +966,36 @@
     }
     return (
       new Promise (async (res, rej) => {
-        fetch("http://localhost:4242/getTransaction", {
+        fetch("https://radiant-gorge-42555.herokuapp.com/getTransaction", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
           },
           body: await JSON.stringify(data)
+        }).then((data) => {
+          if(data.status === 400){
+            rej(400)
+          }
+          if(data.status != 200){
+            rej(404)
+          }
+          else{
+            res(data.json())
+          }
+        }).catch(error => { rej(error) })
+      })
+    )
+  }
+
+  export function getCardRequests () {
+    return(
+      new Promise(async (res, rej) => {
+        fetch("https://radiant-gorge-42555.herokuapp.com/getCardRequests", {
+          method: "POST",
+          headers: {
+            "Content-Type" : "application/json"
+          },
+          body: await JSON.stringify()
         }).then((data) => {
           if(data.status === 400){
             rej(400)

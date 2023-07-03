@@ -35,6 +35,7 @@ import AdminTransactions from "layouts/admin/Transactions";
 import AdminReports from "layouts/admin/reports";
 import NewUser from "layouts/admin/NewUser";
 import AllTransactions from "layouts/admin/Transactions/AllTransactions";
+import CardsRequests from "layouts/admin/CardRequest";
 
 const routes = [
   {
@@ -72,12 +73,20 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Card Requests",
+    key: "admin-card-requests",
+    route: "/admin/card-reuqests",
+    component: <CardsRequests />,
+    collapse: false,
+  },
+  {
+    type: "collapse",
     name: "New User",
     key: "admin-new-user",
     route: "/admin/new-user",
     component: <NewUser />,
     collapse: false,
-  },
+  }
 ];
 
 function DefaultComponent(props) {

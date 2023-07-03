@@ -36,7 +36,7 @@ function AllUserTransactions({user}) {
   }
 
   useEffect(() => {
-
+    
   }, [user])
 
   useEffect(() => {

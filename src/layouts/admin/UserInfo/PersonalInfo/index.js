@@ -154,7 +154,7 @@ function PersonalInfo() {
                 </div>
               */}
               <BasicInfo user={user} />
-              {/*controller.user.identityVerifed ? 
+              {/*controller.user.identityVerified ? 
                 <></> : 
                 <div style={{ marginTop: '20px' }}>
                   <ProfileVerification />
