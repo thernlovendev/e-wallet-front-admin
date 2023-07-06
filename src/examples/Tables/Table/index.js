@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -27,6 +27,12 @@ function Table({ columns, rows }) {
   const { size, fontWeightBold } = typography;
   const { borderWidth } = borders;
 
+  useEffect(() => {
+
+  }, [columns, rows])
+
+
+
   const renderColumns = columns.map(({ name, align, width }, key) => {
     let pl;
     let pr;
@@ -41,26 +47,25 @@ function Table({ columns, rows }) {
       pl = 1;
       pr = 1;
     }
-
-    return (
-      <SoftBox
-        key={name}
-        component="th"
-        width={width || "auto"}
-        pt={1.5}
-        pb={1.25}
-        pl={align === "left" ? pl : 3}
-        pr={align === "right" ? pr : 3}
-        textAlign={align}
-        fontSize={size.xxs}
-        fontWeight={fontWeightBold}
-        color="secondary"
-        opacity={0.7}
-        borderBottom={`${borderWidth[1]} solid ${light.main}`}
-      >
-        {name.toUpperCase()}
-      </SoftBox>
-    );
+      return (
+        <SoftBox
+          key={name}
+          component="th"
+          width={width || "auto"}
+          pt={1.5}
+          pb={1.25}
+          pl={align === "left" ? pl : 3}
+          pr={align === "right" ? pr : 3}
+          textAlign={align}
+          fontSize={size.xxs}
+          fontWeight={fontWeightBold}
+          color="secondary"
+          opacity={0.7}
+          borderBottom={`${borderWidth[1]} solid ${light.main}`}
+        >
+          {name.toUpperCase()}
+        </SoftBox>
+      );
   });
 
   const renderRows = rows.map((row, key) => {

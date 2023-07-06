@@ -31,8 +31,10 @@ function AllTransactions() {
   const [transfers, setTransfers] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const [transactions, setTransactions] = useState([])
-  const itemsPerPage = 10;
+  const [transactions, setTransactions] = useState([]);
+  const [month, setMonth] = useState(0);
+  const itemsPerPage = 20;
+  const [filtredTransaction, setfiltredTransaction] = useState([])
 
   function AmountField({ amount }) {
     return (
@@ -48,12 +50,12 @@ function AllTransactions() {
   useEffect(() => {
     async function getData () {
       getTransactions().then(async (data) => {
-        console.log(data);
         await setWithdraws(data.withdraws);
         await setTopUps(data.topUps);
         await setTransfers(data.transfers);
         await setTotalItems(data.transactions.length)
         await setTransactions(data.transactions)
+        await setfiltredTransaction(data.transactions)
       }).catch(error => {
         console.log(error)
       })
@@ -97,43 +99,55 @@ function AllTransactions() {
   }, [controller]);*/
 
   useEffect(() => {
-    const paginatedTransactions = paginate(currentPage);
-    const rows = paginatedTransactions.map((transaction) => ({
-      action: <Actions id={transaction.id} />,
-      AMOUNT: <AmountField amount={transaction.currency + " " + transaction.amount} />,
-      DESCRIPTION: (
-          <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-            {transaction.action}
-          </SoftTypography>
-      ),
-      RECEPTIANT: (
-          <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-            {transaction.userInteraction}
-          </SoftTypography>
-      ),
-      ID: (
-          <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-            {transaction.id}
-          </SoftTypography>
-      ),
-      DATE: (
-          <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-            {transaction.date}
-          </SoftTypography>
-      ),
-      STATE: (
-          <SoftTypography variant="caption" color={transaction.status === "success" || transaction.status === "succeeded" ? "success" : "error" } fontWeight="medium">
-            {transaction.status}
-          </SoftTypography>
-      ),
-    }));
-    setRows2(rows);
-  }, [currentPage, transactions])
+    async function x () {
+      const paginatedTransactions = paginate(currentPage);
+      const rows = paginatedTransactions.map((transaction) => ({
+        action: <Actions id={transaction.id} />,
+        AMOUNT: <AmountField amount={transaction.currency + " " + transaction.amount} />,
+        DESCRIPTION: (
+            <SoftTypography variant="caption" color="secondary" fontWeight="medium">
+              {transaction.action}
+            </SoftTypography>
+        ),
+        RECEPTIANT: (
+            <SoftTypography variant="caption" color="secondary" fontWeight="medium">
+              {transaction.userInteraction}
+            </SoftTypography>
+        ),
+        ID: (
+            <SoftTypography variant="caption" color="secondary" fontWeight="medium">
+              {transaction.id}
+            </SoftTypography>
+        ),
+        DATE: (
+            <SoftTypography variant="caption" color="secondary" fontWeight="medium">
+              {transaction.date}
+            </SoftTypography>
+        ),
+        STATE: (
+            <SoftTypography variant="caption" color={transaction.status === "success" || transaction.status === "succeeded" ? "success" : "error" } fontWeight="medium">
+              {transaction.status}
+            </SoftTypography>
+        ),
+      }));
+      await setRows2(rows);
+    }
+    x();
+  }, [currentPage, transactions, month])
+
+  async function handleMonth (e) {
+    await setMonth(e.target.value)
+  }
 
   function paginate(page) {
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return transactions.slice(startIndex, endIndex);
+    if(month == 0){
+      return transactions.slice(startIndex, endIndex);
+    }else{
+      const x = transactions.filter(transaction => transaction.objectDate && transaction.objectDate.month == month)
+      return x.slice(startIndex, endIndex);
+    }
   }
 
   function goToPreviousPage() {
@@ -204,6 +218,30 @@ function AllTransactions() {
         <Card>
           <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
             <SoftTypography variant="h6">All Transactions</SoftTypography>
+            <SoftBox display="flex" >
+              <select onChange={handleMonth} style={{marginRight:"5px"}}>
+                <option value={0}>All months</option>
+                <option value={1}>Jan</option>
+                <option value={2}>Feb</option>
+                <option value={3}>Mar</option>
+                <option value={4}>Abr</option>
+                <option value={5}>May</option>
+                <option value={6}>Jun</option>
+                <option value={7}>Jul</option>
+                <option value={8}>Ago</option>
+                <option value={9}>Sep</option>
+                <option value={10}>Oct</option>
+                <option value={11}>Nov</option>
+                <option value={12}>Dic</option>
+              </select>
+              <Button variant="contained" color="primary" onClick={goToPreviousPage}>
+                Previus Page
+              </Button>
+              <SoftTypography mt={1} mr={2} ml={2} variant="h6"> {currentPage} </SoftTypography>
+              <Button variant="contained" color="secondary" onClick={goToNextPage}>
+                Next Page
+              </Button>
+            </SoftBox>
           </SoftBox>
           <SoftBox
             sx={{
@@ -219,23 +257,7 @@ function AllTransactions() {
               columns={columns2}
               rows={rows2.map((item) => ({ ...item }))}
             />
-            <Grid container spacing={2} display="flex" justifyContent="space-around">
-              <Grid item>
-                <Button variant="contained" color="primary" onClick={goToPreviousPage}>
-                  Previus Page
-                </Button>
-              </Grid>
-              <Grid item>
-                <SoftTypography variant="h6"> {currentPage} </SoftTypography>
-              </Grid>
-              <Grid item>
-                <Button variant="contained" color="secondary" onClick={goToNextPage}>
-                  Next Page
-                </Button>
-              </Grid>
-          </Grid>
           </SoftBox>
-
         </Card>
       </SoftBox>
     </DashboardLayout>

@@ -47,6 +47,7 @@ function AdminDashboard() {
   const [users, setUsers] = useState([])
   const [newUsers, setNewUsers] = useState(0)
   const [NofTransactions, setNofTransaction] = useState(0)
+  const [totalAmount, setTotalAmount] = useState(0);
   //const [usersXmonth, setUsersPerMonth] = useState([])
 
   const chart = {
@@ -61,16 +62,17 @@ function AdminDashboard() {
         await setUsersPerMonth(
           {
             label: "Users X Month",
-            data: data.usersXmonth,
+            data: data.usersData.usersXmonth,
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           }
         )
-        await setUsers(data.users)
+        await setUsers(data.usersData.users)
         let localDate = new Date();
         let localDay = await localDate.getDate();
         let localMonth = await localDate.getMonth();
-        await setNewUsers(data.usersXmonth[localMonth])
+        await setNewUsers(data.usersData.usersXmonth[localMonth])
+        await setTotalAmount(data.balance.available[0].amount)
       }).catch(error => {
         console.log(error)
       })
@@ -102,7 +104,7 @@ function AdminDashboard() {
               <MiniStatisticsCard
                 title={{ text: "Total transactions" }}
                 count={NofTransactions}
-                percentage={{ color: "success", text: "%" }}
+                percentage={{ color: "success", text: "" }}
                 icon={{ color: "dark", component: "image" }}
               />
             </Grid>
@@ -110,7 +112,7 @@ function AdminDashboard() {
               <MiniStatisticsCard
                 title={{ text: "Users" }}
                 count={users.length}
-                percentage={{ color: "success", text: "%" }}
+                percentage={{ color: "success", text: "" }}
                 icon={{ color: "dark", component: "person" }}
               />
             </Grid>
@@ -118,15 +120,15 @@ function AdminDashboard() {
               <MiniStatisticsCard
                 title={{ text: "New Users" }}
                 count={newUsers}
-                percentage={{ color: "success", text: "%" }}
+                percentage={{ color: "success", text: "" }}
                 icon={{ color: "dark", component: "public" }}
               />
             </Grid>
             <Grid item xs={12} sm={6} xl={3}>
               <MiniStatisticsCard
-                title={{ text: "Sessions" }}
-                count="1,414"
-                percentage={{ color: "error", text: "%" }}
+                title={{ text: "Total Amount" }}
+                count={totalAmount}
+                percentage={{ color: "success", text: "GBP" }}
                 icon={{ color: "dark", component: "emoji_events" }}
               />
             </Grid>

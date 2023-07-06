@@ -321,7 +321,7 @@ export default function BasicInfo({user}) {
                   Phone Number
                 </SoftTypography>
               </SoftBox>
-              <SoftInput type="number" value={user.phone} />
+              <SoftInput type="number" value={parseInt(user.phone)} />
             </SoftBox>
             </Grid>
           </Grid>

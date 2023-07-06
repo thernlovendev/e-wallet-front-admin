@@ -1,7 +1,7 @@
 // Soft UI Dashboard React examples
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import SoftBox from "components/SoftBox";
-import { Button, Card, Checkbox, Grid } from "@mui/material";
+import { Button, Card, Checkbox, Grid, Tooltip } from "@mui/material";
 import SoftTypography from "components/SoftTypography";
 import Table from "examples/Tables/Table";
 import { Visibility } from "@mui/icons-material";
@@ -12,10 +12,14 @@ import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCar
 import { useNavigate } from "react-router-dom";
 import { getCardRequests } from "apis/request";
 import { aceptCard } from "apis/request";
+import DoneIcon from '@mui/icons-material/Done';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { rejectCard } from "apis/request";
 
 function CardsRequests() {
 
   const navegate = useNavigate();
+  const [update, setUpdate] = useState(1)
   const [columns2, setColumns2] = useState([
     {name: "NAME", align: "left"},
     {name: "DESCRIPTION", align: "left"},
@@ -65,7 +69,7 @@ function CardsRequests() {
       })
     }
     getData();
-  }, [])
+  }, [update])
 
   /*useEffect(() => {
     async function x () {
@@ -158,17 +162,32 @@ function CardsRequests() {
 
   function Actions({id}) {
 
-    const seeTransactionDetails = () => {
+    const acept = () => {
       aceptCard(id).then( data => {
-        navegate("//admin/card-reuqests")
+        console.log("test")
+        navegate("/admin/card-reuqests")
+        setUpdate(Math.random())
       }).catch(error => {console.log(error)})
+    }
 
+    const reject = () => {
+      rejectCard(id).then(data => {
+        navegate("/admin/card-reuqests")
+        setUpdate(Math.random())
+      }).catch(error => {console.log(error)})
     }
 
     return (
       <SoftBox display="flex" gap={2}>
-        <SoftBox onClick={() => {seeTransactionDetails()}}>
-          <Visibility />
+        <SoftBox onClick={() => {acept()}}>
+          <Tooltip title="Aprove Card" placement="top">
+            <DoneIcon />
+          </Tooltip>
+        </SoftBox>
+        <SoftBox onClick={() => {reject()}}>
+          <Tooltip title="Denied Card" placement="top">
+            <CancelIcon />
+          </Tooltip>
         </SoftBox>
       </SoftBox>
     );

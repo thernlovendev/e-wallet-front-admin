@@ -4,7 +4,6 @@ import { Button, Card, Checkbox, Grid } from "@mui/material";
 import SoftTypography from "components/SoftTypography";
 import Table from "examples/Tables/Table";
 import { Visibility } from "@mui/icons-material";
-import { useSoftUIController } from "context";
 import { useEffect, useState } from "react";
 
 function AllUserTransactions({user}) {
@@ -36,12 +35,13 @@ function AllUserTransactions({user}) {
   }
 
   useEffect(() => {
-    
-  }, [user])
+    setTransactions(user)
+  },[user])
 
   useEffect(() => {
     const paginatedTransactions = paginate(currentPage);
     const rows = paginatedTransactions.map((transaction) => ({
+      action: <Actions></Actions>,
       AMOUNT: <AmountField amount={transaction.currency + " " + transaction.amount} />,
       DESCRIPTION: (
           <SoftTypography variant="caption" color="secondary" fontWeight="medium">
@@ -70,7 +70,7 @@ function AllUserTransactions({user}) {
       ),
     }));
     setRows2(rows);
-  }, [currentPage, user])
+  }, [currentPage, user, transactions])
 
   function paginate(page) {
     const startIndex = (page - 1) * itemsPerPage;
@@ -119,7 +119,7 @@ function AllUserTransactions({user}) {
           >
             <Table
               columns={columns2}
-              rows={rows2.map((item) => ({ ...item, action: <Actions /> }))}
+              rows={rows2.map((item) => ({ ...item}))}
             />
             <Grid container spacing={2} display="flex" justifyContent="space-around">
               <Grid item>
@@ -137,7 +137,6 @@ function AllUserTransactions({user}) {
               </Grid>
           </Grid>
           </SoftBox>
-
         </Card>
       </SoftBox>
   );

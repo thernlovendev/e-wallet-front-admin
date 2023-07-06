@@ -28,9 +28,13 @@ import { SweetAlert } from "apis/sweetAlert";
 import { useParams } from "react-router-dom";
 import { getDataUser } from "apis/request";
 import AllUserTransactions from "../AllUserTransactions";
+import Dona from "./Graphics/Dona";
 
 function PersonalInfo() {
   const {id} = useParams();
+  const [USD, setUSD] = useState(0);
+  const [EUR, setEUR] = useState(0);
+  const [GBP, setGBP] = useState(0);
   const [user, setUser] = useState({
     address : {
       city: "",
@@ -60,6 +64,17 @@ function PersonalInfo() {
     console.log(id)
     getDataUser(id).then(async (user) => {
       await setUser(user)
+      user.amount.map(async (amount) => {
+        if(amount.currency === "USD"){
+          await setUSD(amount.amount)
+        }
+        if(amount.currency === "GBP"){
+          await setGBP(amount.amount)
+        }
+        if(amount.currency === "EUR"){
+          await setEUR(amount.amount)
+        }
+      })
     }).catch(error => {console.log(error)})
     async function x () {
     }
@@ -147,13 +162,27 @@ function PersonalInfo() {
                   </Grid>
                 </Grid>
               </Card>
+              <Grid conteiner display={"flex"} alignItems={"center"} >
+                <Grid item xs={6} lg={5} >
+                  <SoftBox mt={3} mr={3} >
+                      <Dona amount={[GBP, USD, EUR]} ></Dona>
+                  </SoftBox>
+                </Grid>
+                <Grid item xs={6} lg={5} >
+                  <SoftBox mt={3} ml={3} >
+                      <Dona amount={[GBP, USD, EUR]} ></Dona>
+                  </SoftBox>
+                </Grid>
+              </Grid>
               {/*controller.user.stripeAccount ? 
                 <></> : 
                 <div style={{ marginTop: '20px' }}>
                   <StepsToActivate />
                 </div>
               */}
-              <BasicInfo user={user} />
+              <SoftBox mt={3}>
+                <BasicInfo user={user} />
+              </SoftBox>
               {/*controller.user.identityVerified ? 
                 <></> : 
                 <div style={{ marginTop: '20px' }}>
