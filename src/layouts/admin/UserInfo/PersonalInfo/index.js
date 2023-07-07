@@ -29,6 +29,8 @@ import { useParams } from "react-router-dom";
 import { getDataUser } from "apis/request";
 import AllUserTransactions from "../AllUserTransactions";
 import Dona from "./Graphics/Dona";
+import CountryTransactions from "layouts/client/financials/components/Account";
+
 
 function PersonalInfo() {
   const {id} = useParams();
@@ -54,6 +56,20 @@ function PersonalInfo() {
     email: "",
     country: "",
     transactions: [],
+    amount:[
+      {
+        amount: 0,
+        currency: "USD"
+      },
+      {
+        amount: 0,
+        currency: "GBP"
+      },
+      {
+        amount: 0,
+        currency: "EUR"
+      }
+    ]
   })
 
   const [checked, setChecked] = useState(false);
@@ -138,6 +154,9 @@ function PersonalInfo() {
                       <SoftTypography variant="h5" fontWeight="medium">
                         {user.name.toUpperCase() + " " + user.lastName.toUpperCase()}
                       </SoftTypography>
+                      <SoftTypography variant="h5" fontWeight="medium">
+                        Blocked: {user.isBlocked ? "True" : "False"}
+                      </SoftTypography>
                       <SoftTypography variant="button" color="text" fontWeight="medium">
                         
                       </SoftTypography>
@@ -168,9 +187,18 @@ function PersonalInfo() {
                       <Dona amount={[GBP, USD, EUR]} ></Dona>
                   </SoftBox>
                 </Grid>
-                <Grid item xs={6} lg={5} >
+                <Grid item xs={6} lg={12} >
                   <SoftBox mt={3} ml={3} >
-                      <Dona amount={[GBP, USD, EUR]} ></Dona>
+                    {user.amount.map(account => {
+                      return(
+                      <Grid item xs={12} sm={6} xl={6} mt={2} >
+                        <CountryTransactions
+                          title={{ text: account.currency + " " + account.amount.toFixed(2), fontWeight: "bold" }}
+                          icon={account.currency}
+                        />
+                      </Grid>
+                      )
+                    })}
                   </SoftBox>
                 </Grid>
               </Grid>

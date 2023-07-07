@@ -1,6 +1,6 @@
 // Soft UI Dashboard React examples
 import SoftBox from "components/SoftBox";
-import { Card, Grid } from "@mui/material";
+import { Card, Grid, Tooltip } from "@mui/material";
 import SoftTypography from "components/SoftTypography";
 import Table from "examples/Tables/Table";
 import { Delete, Person } from "@mui/icons-material";
@@ -11,6 +11,8 @@ import { Checkbox } from "@mui/material";
 import { Button } from "reactstrap";
 import { getDataUser } from "apis/request";
 import { freezeUser } from "apis/request";
+import DoNotDisturbAltIcon from '@mui/icons-material/DoNotDisturbAlt';
+import { hanndleBlockUser } from "apis/request";
 
 function AllUsers({users}) {
   //const { columns, rows } = usersTableData;
@@ -66,8 +68,8 @@ function AllUsers({users}) {
       let LAST_PURCHASE_DATE = ""; let totalTransfered = 0;
 
       return({
-        action: <Actions id={user.id} />,
-        NAME: <NameField name={user.name + " " +user.lastName} />,
+        action: <Actions id={user.id} state={user.isBlocked}/>,
+        NAME: <NameField name={user.name + " " + user.lastName} />,
         JOIN_DATE: (
           <SoftTypography variant="caption" color="secondary" fontWeight="medium">
             {user.singUpDate ? user.singUpDate.day + "/" + user.singUpDate.month + "/" + user.singUpDate.year : ""}
@@ -129,23 +131,60 @@ function AllUsers({users}) {
     );
   }
 
-  function Actions({id}) {
+  function Actions({id, state}) {
 
     const seeUserDetails = () => {
       navegate(`/dataUser/${id}`)
     }
 
-    return (
-      <SoftBox display="flex" gap={2}>
-        <SoftBox onClick={() => {seeUserDetails()}}>
-          <Person />
+    const blockUser = () => {
+      hanndleBlockUser(id).then(user => {
+        navegate(`/dataUser/${id}`)
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+
+    if(state){
+      return (
+        <SoftBox display="flex" gap={2}>
+          <SoftBox onClick={() => {seeUserDetails()}}>
+            <Tooltip title="Look user info" placement="top">
+              <Person />
+            </Tooltip>
+          </SoftBox>
+          <SoftBox onClick={() => {}}>
+            <Delete />
+          </SoftBox>
+          <SoftBox onClick={() => {blockUser()}}>
+            <Tooltip title="Unblock user" placement="top">
+              <DoNotDisturbAltIcon />
+            </Tooltip>
+          </SoftBox>
         </SoftBox>
-        <SoftBox onClick={() => {}}>
-          <Delete />
+      );
+    }else{
+      return (
+        <SoftBox display="flex" gap={2}>
+          <SoftBox onClick={() => {seeUserDetails()}}>
+            <Tooltip title="Look user info" placement="top">
+              <Person />
+            </Tooltip>
+          </SoftBox>
+          <SoftBox onClick={() => {}}>
+            <Delete />
+          </SoftBox>
+          <SoftBox onClick={() => {blockUser()}}>
+            <Tooltip title="Block user" placement="top">
+              <DoNotDisturbAltIcon />
+            </Tooltip>
+          </SoftBox>
         </SoftBox>
-      </SoftBox>
-    );
+      );
+    }
   }
+
+
 
   return (
     <SoftBox mb={3}>

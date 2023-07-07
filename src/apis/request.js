@@ -1037,3 +1037,30 @@
       })
     )
   }
+
+  export function hanndleBlockUser (id) {
+    const data = {
+      id : id
+    }
+    return(
+      new Promise(async (res, rej) => {
+        fetch("https://radiant-gorge-42555.herokuapp.com/updateBlock", {
+          method: "POST",
+          headers: {
+            "Content-Type" : "application/json"
+          },
+          body: await JSON.stringify(data)
+        }).then((data) => {
+          if(data.status === 400){
+            rej(400)
+          }
+          if(data.status != 200){
+            rej(404)
+          }
+          else{
+            res(data.json())
+          }
+        }).catch(error => { rej(error) })
+      })
+    )
+  }
