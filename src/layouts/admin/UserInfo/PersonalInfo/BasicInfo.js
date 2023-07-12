@@ -107,7 +107,6 @@ export default function BasicInfo({user}) {
         </Grid>
       </Grid>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={4} md={6}>
 {/*          <SoftBox mb={1}>
             <SoftBox ml={0.5}>
               <SoftTypography component="label" variant="caption" fontWeight="bold">
@@ -123,12 +122,21 @@ export default function BasicInfo({user}) {
           <SoftBox mb={2}>
             <SoftBox ml={0.5}>
               <SoftTypography component="label" variant="caption" fontWeight="bold">
+                ID Number
+              </SoftTypography>
+            </SoftBox>
+            <SoftInput type="number" placeholder={user.idNumber} />
+          </SoftBox>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <SoftBox mb={2}>
+            <SoftBox ml={0.5}>
+              <SoftTypography component="label" variant="caption" fontWeight="bold">
                 Phone Number
               </SoftTypography>
             </SoftBox>
             <SoftInput type="number" placeholder={user.phone} />
           </SoftBox>
-        </Grid>
         </Grid>
       </Grid>
       <Grid container spacing={3}>
@@ -302,7 +310,6 @@ export default function BasicInfo({user}) {
           </Grid>
         </Grid>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={4} md={6}>
       {/*          <SoftBox mb={1}>
               <SoftBox ml={0.5}>
                 <SoftTypography component="label" variant="caption" fontWeight="bold">
@@ -318,13 +325,22 @@ export default function BasicInfo({user}) {
             <SoftBox mb={2}>
               <SoftBox ml={0.5}>
                 <SoftTypography component="label" variant="caption" fontWeight="bold">
+                  ID Number
+                </SoftTypography>
+              </SoftBox>
+              <SoftInput type="number" value={parseInt(user.idNumber)} />
+            </SoftBox>
+            </Grid>
+            <Grid item xs={12} md={6}>
+            <SoftBox mb={2}>
+              <SoftBox ml={0.5}>
+                <SoftTypography component="label" variant="caption" fontWeight="bold">
                   Phone Number
                 </SoftTypography>
               </SoftBox>
               <SoftInput type="number" value={parseInt(user.phone)} />
             </SoftBox>
             </Grid>
-          </Grid>
         </Grid>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={5} md={5}>

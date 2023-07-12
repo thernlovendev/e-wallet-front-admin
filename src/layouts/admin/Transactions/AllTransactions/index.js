@@ -33,6 +33,7 @@ function AllTransactions() {
   const [totalItems, setTotalItems] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const [month, setMonth] = useState(0);
+  const [currency, setCurrency] = useState(0);
   const itemsPerPage = 20;
   const [filtredTransaction, setfiltredTransaction] = useState([])
 
@@ -133,18 +134,32 @@ function AllTransactions() {
       await setRows2(rows);
     }
     x();
-  }, [currentPage, transactions, month])
+  }, [currentPage, transactions, month, currency])
 
   async function handleMonth (e) {
-    await setMonth(e.target.value)
+    if(e.target.name === "month"){
+      await setMonth(e.target.value)
+    }
+    if(e.target.name === "currency" ){
+      await setCurrency(e.target.value)
+    }
   }
 
   function paginate(page) {
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    if(month == 0){
+    if(month == 0 && currency == 0){
       return transactions.slice(startIndex, endIndex);
-    }else{
+    }
+    if(currency != 0 && month != 0){
+      const x = transactions.filter(transaction => transaction.objectDate && transaction.currency == currency && transaction.objectDate.month == month)
+      return x.slice(startIndex, endIndex);
+    }
+    if(currency != 0){
+      const x = transactions.filter(transaction => transaction.objectDate && transaction.currency == currency)
+      return x.slice(startIndex, endIndex);
+    }
+    if(month != 0){
       const x = transactions.filter(transaction => transaction.objectDate && transaction.objectDate.month == month)
       return x.slice(startIndex, endIndex);
     }
@@ -219,7 +234,13 @@ function AllTransactions() {
           <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
             <SoftTypography variant="h6">All Transactions</SoftTypography>
             <SoftBox display="flex" >
-              <select onChange={handleMonth} style={{marginRight:"5px"}}>
+            <select name="currency" onChange={handleMonth} style={{marginRight:"5px"}}>
+                <option value={0}>All currencys</option>
+                <option value={"USD"}>USD</option>
+                <option value={"EUR"}>EUR</option>
+                <option value={"GBP"}>GBP</option>
+              </select>
+              <select name="month" onChange={handleMonth} style={{marginRight:"5px"}}>
                 <option value={0}>All months</option>
                 <option value={1}>Jan</option>
                 <option value={2}>Feb</option>

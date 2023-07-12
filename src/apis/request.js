@@ -784,7 +784,7 @@
     }
     return(
       new Promise (async (res, rej) => {
-        fetch("https://radiant-gorge-42555.herokuapp.com/rejectCardRequest", {
+        fetch("http://localhost:4242/rejectCardRequest", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -811,7 +811,7 @@
     }
     return(
       new Promise (async (res, rej) => {
-        fetch("https://radiant-gorge-42555.herokuapp.com/confirmCreditCard", {
+        fetch("http://localhost:4242/confirmCreditCard", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -840,7 +840,7 @@
     }
     return(
       new Promise(async (res, rej) => {
-        fetch("https://radiant-gorge-42555.herokuapp.com/cancelCardRequest", {
+        fetch("http://localhost:4242/cancelCardRequest", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -1017,7 +1017,7 @@
   export function getCardRequests () {
     return(
       new Promise(async (res, rej) => {
-        fetch("https://radiant-gorge-42555.herokuapp.com/getCardRequests", {
+        fetch("http://localhost:4242/getCardRequests", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -1045,6 +1045,33 @@
     return(
       new Promise(async (res, rej) => {
         fetch("https://radiant-gorge-42555.herokuapp.com/updateBlock", {
+          method: "POST",
+          headers: {
+            "Content-Type" : "application/json"
+          },
+          body: await JSON.stringify(data)
+        }).then((data) => {
+          if(data.status === 400){
+            rej(400)
+          }
+          if(data.status != 200){
+            rej(404)
+          }
+          else{
+            res(data.json())
+          }
+        }).catch(error => { rej(error) })
+      })
+    )
+  }
+
+  export function resetPass (id) {
+    const data = {
+      id : id
+    }
+    return(
+      new Promise(async (res, rej) => {
+        fetch("http://localhost:4242/resetPass", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"

@@ -1,10 +1,27 @@
 import { Card, Grid } from "@mui/material";
+import { resetPass } from "apis/request";
 import SoftBox from "components/SoftBox";
 import SoftInput from "components/SoftInput";
 import SoftTypography from "components/SoftTypography";
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function ChangePassword() {
+export default function ChangePassword({id}) {
+  const navegate = useNavigate();
+
+  useEffect(()=>{
+
+  }, [id])
+
+  const handleReset = () => {
+    resetPass(id).then(data => {
+      navegate(`/dataUser/${id}`)
+    }).catch(error => {
+      console.log(error)
+      
+    })
+  }
+
   return (
     <Card
       sx={{
@@ -14,7 +31,7 @@ export default function ChangePassword() {
         mt: 3,
       }}
     >
-      <SoftBox mb={3}>
+{/*      <SoftBox mb={3}>
         <SoftTypography variant="h5" fontWeight="bolder" color="text">
           Change Password
         </SoftTypography>
@@ -44,9 +61,9 @@ export default function ChangePassword() {
           </SoftBox>
           <SoftInput type="password" placeholder="Confirm Password" />
         </Grid>
-      </Grid>
+      </Grid>*/}
       <Grid container spacing={2}>
-        <Grid item xs={12} md={8}>
+{/*        <Grid item xs={12} md={8}>
           <h5 class="mt-5">Password Requirements</h5>
           <p class="text-muted mb-2">Please follow this guide for a strong password:</p>
           <ul class="text-muted ps-4 mb-0 float-start">
@@ -63,10 +80,10 @@ export default function ChangePassword() {
               <span class="text-sm">Change it often</span>
             </li>
           </ul>
-        </Grid>
+        </Grid>*/}
         <Grid item xs={12} md={4}>
           <SoftBox display="flex" alignItems="end">
-            <button class="btn bg-gradient-dark btn-sm float-end mt-6 mb-0">Update password</button>
+            <button onClick={handleReset} class="btn bg-gradient-dark btn-sm float-end mt-6 mb-0">Reset password</button>
           </SoftBox>
         </Grid>
       </Grid>

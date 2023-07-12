@@ -15,6 +15,7 @@ import { aceptCard } from "apis/request";
 import DoneIcon from '@mui/icons-material/Done';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { rejectCard } from "apis/request";
+import { SweetAlert } from "apis/sweetAlert";
 
 function CardsRequests() {
 
@@ -22,6 +23,7 @@ function CardsRequests() {
   const [update, setUpdate] = useState(1)
   const [columns2, setColumns2] = useState([
     {name: "NAME", align: "left"},
+    {name: "COUNTRY", aling: "left"},
     {name: "DESCRIPTION", align: "left"},
     { name: "RECEPTIANT", align: "left" },
     { name: "ID", align: "left" },
@@ -37,13 +39,15 @@ function CardsRequests() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [requests, setRequests] = useState([{
-    id: "",
-    request: "",
-    state: "",
-    user: {
-        name: "",
-        lastName: "",
-        email: ""
+    data: {
+      id: "",
+      request: "",
+      state: "",
+      user: {
+          name: "",
+          lastName: "",
+          email: ""
+      }
     }
   }])
   const itemsPerPage = 10;
@@ -62,8 +66,8 @@ function CardsRequests() {
   useEffect(() => {
     async function getData () {
       getCardRequests().then(async (data) => {
+        console.log(data)
         await setRequests(data);
-        console.log(requests)
       }).catch(error => {
         console.log(error)
       })
@@ -108,33 +112,39 @@ function CardsRequests() {
 
   useEffect(() => {
     console.log(requests)
+    console.log(requests[0].data)
     const paginatedRequests = paginate(currentPage);
     const rows = paginatedRequests.map((request) => ({
-      action: <Actions id={request.id} />,
-      NAME: <AmountField amount={request.user.name + " " + request.user.lastName} />,
+      action: <Actions id={request.data.id} />,
+      NAME: <AmountField amount={request.data.user.name + " " + request.data.user.lastName} />,
       DESCRIPTION: (
           <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-            {request.request}
+            {request.data.request}
           </SoftTypography>
+      ),
+      COUNTRY: (
+        <SoftTypography variant="caption" color="secondary" fontWeight="medium">
+          {request.data.country}
+        </SoftTypography>
       ),
       RECEPTIANT: (
           <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-            {request.user.email}
+            {request.data.user.email}
           </SoftTypography>
       ),
       ID: (
           <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-            {request.id}
+            {request.data.id}
           </SoftTypography>
       ),
       DATE: (
           <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-            {request.date}
+            {request.data.date}
           </SoftTypography>
       ),
       STATE: (
-          <SoftTypography variant="caption" color={request.state === "aproved" || request.state === "succeeded" ? "success" : "error" } fontWeight="medium">
-            {request.state}
+          <SoftTypography variant="caption" color={request.data.state === "aproved" || request.data.state === "succeeded" ? "success" :request.data.state === "pending" ? "warning" : "error" } fontWeight="medium">
+            {request.data.state}
           </SoftTypography>
       ),
     }));
@@ -167,7 +177,11 @@ function CardsRequests() {
         console.log("test")
         navegate("/admin/card-reuqests")
         setUpdate(Math.random())
-      }).catch(error => {console.log(error)})
+      }).catch(error => {
+        if(error === 400){
+          SweetAlert("warning", "Ooops", "No card for US users for the moment")
+        }
+        console.log(error)})
     }
 
     const reject = () => {
@@ -199,6 +213,21 @@ function CardsRequests() {
         <Card>
           <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
             <SoftTypography variant="h6">All Credit Card Requests</SoftTypography>
+            <SoftBox display="flex">
+              <Grid item ml={2}>
+                  <Button variant="contained" color="primary" onClick={goToPreviousPage}>
+                    Previus Page
+                  </Button>
+                </Grid>
+                <Grid item ml={2} mt={1}>
+                  <SoftTypography variant="h6"> {currentPage} </SoftTypography>
+                </Grid>
+                <Grid item ml={2}>
+                  <Button variant="contained" color="secondary" onClick={goToNextPage}>
+                    Next Page
+                  </Button>
+                </Grid>
+            </SoftBox>
           </SoftBox>
           <SoftBox
             sx={{
@@ -214,23 +243,7 @@ function CardsRequests() {
               columns={columns2}
               rows={rows2.map((item) => ({ ...item }))}
             />
-            <Grid container spacing={2} display="flex" justifyContent="space-around">
-              <Grid item>
-                <Button variant="contained" color="primary" onClick={goToPreviousPage}>
-                  Previus Page
-                </Button>
-              </Grid>
-              <Grid item>
-                <SoftTypography variant="h6"> {currentPage} </SoftTypography>
-              </Grid>
-              <Grid item>
-                <Button variant="contained" color="secondary" onClick={goToNextPage}>
-                  Next Page
-                </Button>
-              </Grid>
-          </Grid>
           </SoftBox>
-
         </Card>
       </SoftBox>
     </DashboardLayout>

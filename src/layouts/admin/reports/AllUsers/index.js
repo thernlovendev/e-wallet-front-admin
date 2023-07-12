@@ -22,6 +22,7 @@ function AllUsers({users}) {
   const [columns, setColumns] = useState(
     [
       { name: "NAME", align: "left" },
+      { name: "EMAIL", aling: "left" },
       { name: "JOIN_DATE", align: "left" },
       //{ name: "LAST_PURCHASE_DATE", align: "left" },
       { name: "TRANSFERRED", align: "left" },
@@ -32,6 +33,11 @@ function AllUsers({users}) {
   )
   const [rows, setRows] = useState([{
     NAME: <NameField name="" />,
+    EMAIL: (
+      <SoftTypography variant="caption" color="secondary" fontWeight="medium">
+       
+      </SoftTypography>
+    ),
     JOIN_DATE: (
       <SoftTypography variant="caption" color="secondary" fontWeight="medium">
        
@@ -70,6 +76,11 @@ function AllUsers({users}) {
       return({
         action: <Actions id={user.id} state={user.isBlocked}/>,
         NAME: <NameField name={user.name + " " + user.lastName} />,
+        EMAIL: (
+          <SoftTypography variant="caption" color="secondary" fontWeight="medium">
+            {user.email}
+          </SoftTypography>
+        ),
         JOIN_DATE: (
           <SoftTypography variant="caption" color="secondary" fontWeight="medium">
             {user.singUpDate ? user.singUpDate.day + "/" + user.singUpDate.month + "/" + user.singUpDate.year : ""}
@@ -136,7 +147,7 @@ function AllUsers({users}) {
     const seeUserDetails = () => {
       navegate(`/dataUser/${id}`)
     }
-
+    
     const blockUser = () => {
       hanndleBlockUser(id).then(user => {
         navegate(`/dataUser/${id}`)
@@ -191,6 +202,21 @@ function AllUsers({users}) {
       <Card>
         <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
           <SoftTypography variant="h6">All Users</SoftTypography>
+          <SoftBox display="flex">
+            <Grid item>
+                <Button variant="contained" color="primary" onClick={goToPreviousPage}>
+                  Previus Page
+                </Button>
+              </Grid>
+              <Grid item ml={3} mt={1}>
+                <SoftTypography variant="h6"> {currentPage} </SoftTypography>
+              </Grid>
+              <Grid item ml={3}>
+                <Button variant="contained" color="secondary" onClick={goToNextPage}>
+                  Next Page
+                </Button>
+              </Grid>
+          </SoftBox>
         </SoftBox>
         <SoftBox
           sx={{
@@ -203,21 +229,6 @@ function AllUsers({users}) {
           }}
         >
           <Table columns={columns} rows={rows.map((item) => ({ ...item }))} />
-          <Grid container spacing={2} display="flex" justifyContent="space-around">
-              <Grid item>
-                <Button variant="contained" color="primary" onClick={goToPreviousPage}>
-                  Previus Page
-                </Button>
-              </Grid>
-              <Grid item>
-                <SoftTypography variant="h6"> {currentPage} </SoftTypography>
-              </Grid>
-              <Grid item>
-                <Button variant="contained" color="secondary" onClick={goToNextPage}>
-                  Next Page
-                </Button>
-              </Grid>
-          </Grid>
         </SoftBox>
       </Card>
     </SoftBox>

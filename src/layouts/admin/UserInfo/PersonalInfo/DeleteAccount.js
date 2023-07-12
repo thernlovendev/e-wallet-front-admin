@@ -2,9 +2,22 @@ import { Card, Grid, Switch } from "@mui/material";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftTypography from "components/SoftTypography";
-import React from "react";
+import React, { useEffect } from "react";
 
-export default function DeleteAccount() {
+export default function DeleteAccount({id}) {
+
+  useEffect(() => {
+
+  }, [id])
+
+  const handleBlock = () => {
+
+  }
+
+  const handleDelete = () => {
+
+  }
+
   return (
     <Card
       sx={{
@@ -17,9 +30,6 @@ export default function DeleteAccount() {
       <SoftBox mb={3}>
         <SoftTypography variant="h5" fontWeight="bolder" color="text">
           Delete Account
-        </SoftTypography>
-        <SoftTypography variant="h6" fontWeight="light" color="text">
-          Once you delete your account, there is no going back. Please be certain.
         </SoftTypography>
       </SoftBox>
       <Grid container spacing={1}>
@@ -37,10 +47,10 @@ export default function DeleteAccount() {
               </SoftBox>
             </SoftBox>
             <SoftBox display="flex" gap={1}>
-              <SoftButton variant="outlined" color={"dark"} onClick={() => {}}>
-                Deactivate
+              <SoftButton variant="outlined" color={"dark"} onClick={() => handleBlock()}>
+                Block Account
               </SoftButton>
-              <SoftButton component="button" color={"error"} onClick={() => {}}>
+              <SoftButton component="button" color={"error"} onClick={() => handleDelete()}>
                 Delete Account
               </SoftButton>
             </SoftBox>

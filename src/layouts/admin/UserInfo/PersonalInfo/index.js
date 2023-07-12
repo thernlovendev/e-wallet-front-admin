@@ -30,6 +30,7 @@ import { getDataUser } from "apis/request";
 import AllUserTransactions from "../AllUserTransactions";
 import Dona from "./Graphics/Dona";
 import CountryTransactions from "layouts/client/financials/components/Account";
+import MasterCard from "examples/Cards/MasterCard";
 
 
 function PersonalInfo() {
@@ -38,6 +39,12 @@ function PersonalInfo() {
   const [EUR, setEUR] = useState(0);
   const [GBP, setGBP] = useState(0);
   const [user, setUser] = useState({
+    stripeCard: [{
+      id: "",
+      last4: "****",
+      exp_year: "",
+      exp_month: "",
+    }],
     address : {
       city: "",
       line1: "",
@@ -181,14 +188,14 @@ function PersonalInfo() {
                   </Grid>
                 </Grid>
               </Card>
-              <Grid conteiner display={"flex"} alignItems={"center"} >
-                <Grid item xs={6} lg={5} >
+              <Grid conteiner display={"flex"} alignItems={"center"} justifyContent="space-around" >
+                <Grid item xs={5} lg={6} >
                   <SoftBox mt={3} mr={3} >
                       <Dona amount={[GBP, USD, EUR]} ></Dona>
                   </SoftBox>
                 </Grid>
-                <Grid item xs={6} lg={12} >
-                  <SoftBox mt={3} ml={3} >
+                <Grid item ml={4} xs={6} lg={8} >
+                  <SoftBox display="flex" flexDirection="column" justifyContent="space-arround" mt={3} ml={3} >
                     {user.amount.map(account => {
                       return(
                       <Grid item xs={12} sm={6} xl={6} mt={2} >
@@ -199,7 +206,18 @@ function PersonalInfo() {
                       </Grid>
                       )
                     })}
+                    <Grid item xs={12} sm={6} xl={6} mt={2} >
+{user.stripeCard.length > 1 && user.stripeCard[0].id ? <MasterCard
+                      id={user.stripeCard[0].id}
+                      number={"************" + user.stripeCard[0].last4}
+                      holder={user.name + " " + user.lastName}
+                      expires={user.stripeCard[0].exp_month + "/" + user.stripeCard[0].exp_year}
+                      />: <></>}
+                    </Grid>
                   </SoftBox>
+                </Grid>
+                <Grid item xs={5} lg={6} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+                  <img src={user.idUrl} style={{ maxWidth: '100%', height: 'auto' }} />
                 </Grid>
               </Grid>
               {/*controller.user.stripeAccount ? 
@@ -217,9 +235,9 @@ function PersonalInfo() {
                   <ProfileVerification />
                 </div>
               */}
-              <ChangePassword />
+              {<ChangePassword id={user.id} />}
               {/*<TwoFactorAuth />*/}
-              {/*<DeleteAccount />*/}
+              {<DeleteAccount id={user.id} />}
               <AllUserTransactions user={user.transactions} />
             </Grid>
           </Grid>
