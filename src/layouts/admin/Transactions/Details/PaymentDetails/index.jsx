@@ -5,8 +5,14 @@ import masterCardLogo from "assets/images/logos/mastercard.png";
 // Soft UI Dashboard React examples
 import borders from "assets/theme/base/borders";
 import Bill from "./Bill";
+import { useEffect } from "react";
 
-function PaymentDetails() {
+function PaymentDetails({transaction, user}) {
+
+  useEffect(() => {
+
+  },[transaction, user])
+
   const { borderWidth, borderColor } = borders;
   return (
     <>
@@ -37,11 +43,11 @@ function PaymentDetails() {
       </SoftBox>
       <SoftBox px={2}>
         <Bill
-          name="Lukas Thern Loven"
-          ID="243598234"
+          name={user.name + " " + user.lastName}
+          ID={user.idNumber}
           Fingerprint="UKztTqLj2HS5t4d0"
           Type="Mastercard credit card"
-          Issuer="SEB KORT BANK AB"
+          Issuer={transaction.action.toUpperCase()}
         />
       </SoftBox>
     </>

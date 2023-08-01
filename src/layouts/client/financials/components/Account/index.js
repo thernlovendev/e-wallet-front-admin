@@ -55,7 +55,7 @@ function CountryTransactions({ bgColor, title, icon}) {
                 src={icon === "GBP" ? gbImg : icon === "USD" ? usImg : icon === "EUR" ? eurImg : <></>}
                 alt="profile-image"
                 variant="rounded"
-                size="lg"
+                size="sm"
                 shadow="sm"
               />
             </Grid>

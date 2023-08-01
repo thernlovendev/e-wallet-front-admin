@@ -9,6 +9,8 @@ import Socials from "./Socials";
 import Identity from "./Identity";
 import { useSoftUIController } from "context";
 import SoftAlert from "components/SoftAlert";
+import { editProfileInfo, SignUpR } from "apis/request";
+import { SweetAlert } from "apis/sweetAlert";
 
 
 export default function NewUser() {
@@ -23,9 +25,22 @@ export default function NewUser() {
         setActiveStep((prev) => formStep[prev.index - 1])
     }
 
+    const handleNewUser = (user) => {
+      console.log(user)
+      SignUpR(user.email, user.password, user.name, user.lastName, user.phone, user.country, 
+        user.day, user.month, user.year).then(user => {
+          SweetAlert("success", "Good", "User created");
+        }).catch(error => {
+        if(error === 400){
+          SweetAlert("warning", "Ooops", "Email already in use")
+        }else{
+          SweetAlert("warning", "Ooops", "Something went wrong")
+        }
+      })
+    }
+
     const formStep = [
-        { label: "Address", index: 0, element: <Address onSave={nextPage} /> },
-        { label: "Identity", index: 1, element: <Identity onSave={nextPage} prev={prevPage} /> },
+        { label: "New User", index: 0, element: <About onSave={handleNewUser} /> },
         //{ label: "First Top-up", index: 2, element: <Socials /> },
     ];
     
@@ -36,7 +51,7 @@ export default function NewUser() {
               <DashboardLayout>
                 <Stepper activeStep={activeStep.index} alternativeLabel>
                   {formStep.map((step, index) => (
-                    <Step key={step.index} onClick={() => setActiveStep(formStep[index])}>
+                    <Step >
                       <StepLabel>{step.label}</StepLabel>
                     </Step>
                   ))}

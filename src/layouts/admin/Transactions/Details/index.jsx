@@ -15,21 +15,59 @@ import TransactionAmount from "./TransactionAmount";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getTransaction } from "apis/request";
+import { getDataUser } from "apis/request";
+import { refoundTransaction } from "apis/request";
+import { SweetAlert } from "apis/sweetAlert";
 
 function TransactionDetails() {
   
   const {id} = useParams();
   const [transaction, setTransaction] = useState({
     id: "",
-    amount: "",
-
+    action: "",
+    amount: 0,
+    currency: "",
+    date: "",
+    objectDate: {
+      year: 0,
+      day: 0,
+      month: 0
+    },
+    status: "",
+    userID: "",
+    userInteraction: ""
+  })
+  const [user, setUser] = useState({
+    name: "",
+    lastName: "",
+    idNumber: "",
+    id: ""
   })
 
   useEffect(() => {
     getTransaction(id).then(transaction => {
       console.log(transaction)
+      setTransaction(transaction)
+      getDataUser(transaction.userID).then(user => {
+        setUser(user)
+      })
     })
   }, [id])
+
+  const handleRefound = () => {
+    refoundTransaction(transaction).then(async (data) => {
+      console.log("entro")
+      SweetAlert("success", "Good", "Charge refounded");
+      console.log(data)
+    }).catch(async (error) => {
+      console.log(error)
+      if(error == 406){
+        SweetAlert("warning", "Ooops", "Charge already refounded")
+      }else{
+        SweetAlert("warning", "Ooops", "Something went wrong");
+      }
+    })
+  }
 
   return (
     <DashboardLayout>
@@ -57,7 +95,7 @@ function TransactionDetails() {
                   <SoftTypography variant="caption" color="text" textAlign="left">
                     Code:&nbsp;
                     <SoftTypography variant="caption" fontWeight="medium">
-                      243598234
+                      {transaction.id}
                     </SoftTypography>
                   </SoftTypography>
                 </SoftBox>
@@ -70,13 +108,13 @@ function TransactionDetails() {
 
             <Grid container spacing={0}>
               <Grid item xs={12} sm={6} xl={4}>
-                <TimelineDetails />
+                <TimelineDetails onSave={handleRefound} transaction={transaction} />
               </Grid>
               <Grid item xs={12} sm={6} xl={4}>
-                <PaymentDetails />
+                <PaymentDetails transaction={transaction} user={user}/>
               </Grid>
               <Grid item xs={12} sm={6} xl={4}>
-                <TransactionAmount />
+                <TransactionAmount transaction={transaction} />
               </Grid>
             </Grid>
           </Card>

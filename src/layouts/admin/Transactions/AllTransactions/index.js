@@ -51,6 +51,7 @@ function AllTransactions() {
   useEffect(() => {
     async function getData () {
       getTransactions().then(async (data) => {
+        console.log(data.transactions)
         await setWithdraws(data.withdraws);
         await setTopUps(data.topUps);
         await setTransfers(data.transfers);

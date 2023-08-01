@@ -529,11 +529,10 @@
       )
   }
   
-  export function editProfileInfo (id, user, address) {
-  
+  export function editProfileInfo (id, user) {
     const data = {
       id: id,
-      address: address
+      user: user
     }
     return(
       new Promise(async(res, rej) =>{
@@ -543,8 +542,12 @@
             "Content-Type" : "application/json"
             },
           body: await JSON.stringify(data),
-        }).then(data => {
-          res(data.json())
+        }).then(async (data) => {
+          if(data.status == 200){
+            res(data.json())
+          }else{
+            rej(data.status)
+          }
         }).catch(error =>{
           rej(error.json())
         })
@@ -784,7 +787,7 @@
     }
     return(
       new Promise (async (res, rej) => {
-        fetch("http://localhost:4242/rejectCardRequest", {
+        fetch("https://radiant-gorge-42555.herokuapp.com/rejectCardRequest", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -811,7 +814,7 @@
     }
     return(
       new Promise (async (res, rej) => {
-        fetch("http://localhost:4242/confirmCreditCard", {
+        fetch("https://radiant-gorge-42555.herokuapp.com/confirmCreditCard", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -840,7 +843,7 @@
     }
     return(
       new Promise(async (res, rej) => {
-        fetch("http://localhost:4242/cancelCardRequest", {
+        fetch("https://radiant-gorge-42555.herokuapp.com/cancelCardRequest", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -1017,7 +1020,7 @@
   export function getCardRequests () {
     return(
       new Promise(async (res, rej) => {
-        fetch("http://localhost:4242/getCardRequests", {
+        fetch("https://radiant-gorge-42555.herokuapp.com/getCardRequests", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -1071,7 +1074,7 @@
     }
     return(
       new Promise(async (res, rej) => {
-        fetch("http://localhost:4242/resetPass", {
+        fetch("https://radiant-gorge-42555.herokuapp.com/resetPass", {
           method: "POST",
           headers: {
             "Content-Type" : "application/json"
@@ -1085,6 +1088,29 @@
             rej(404)
           }
           else{
+            res(data.json())
+          }
+        }).catch(error => { rej(error) })
+      })
+    )
+  }
+
+  export function refoundTransaction (transaction) {
+    const data = {
+      transaction: transaction
+    };
+    return(
+      new Promise(async (res, rej) => {
+        fetch("https://radiant-gorge-42555.herokuapp.com/refoundTransaction", {
+          method: "POST",
+          headers: {
+            "Content-Type" : "application/json"
+          },
+          body: await JSON.stringify(data)
+        }).then((data) => {
+          if(data.status != 200){
+            rej(data.status)
+          }else{
             res(data.json())
           }
         }).catch(error => { rej(error) })

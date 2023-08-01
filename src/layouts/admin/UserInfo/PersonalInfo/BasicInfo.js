@@ -8,8 +8,10 @@ import SoftButton from "components/SoftButton";
 import { verifyAddress } from "apis/request";
 import { setCurrencys } from "context";
 import { SweetAlert } from "apis/sweetAlert";
+import { editProfileInfo } from "apis/request";
 
-export default function BasicInfo({user}) {
+export default function BasicInfo({user, onSave}) {
+  const [x, setX] = useState()
   const [checked, setChecked] = useState(false);
   const [formDataAddress, setFormDataAddress] = useState({
     city : user.address.city,
@@ -17,11 +19,36 @@ export default function BasicInfo({user}) {
     state : user.address.state,
     postal_code : user.address.postal_code
   });
+  const [name, setName] = useState (user.name);
+  const [lastName, setLastName] = useState (user.lastName);
+  const [email, setEmail] = useState(user.email);
+  const [formDataInfor, setFormDataInfo] = useState({
+    name: user.name,
+    lastName: user.lastName,
+    email: user.email,
+    dob: {
+      day: user.dob.day,
+      month: user.dob.month,
+      year: user.dob.year
+    }
+  })
 
   const handleFormChange = (e) => {
     setFormDataAddress({ ...formDataAddress, [e.target.name]: e.target.value });
     console.log(formDataAddress)
   };
+
+  const handleFormChange2 = async (e) => {
+    if(e.target.name === "name"){
+      setName(e.target.value);
+    }
+    if(e.target.name === "lastName"){
+      setLastName(e.target.value)
+    }
+    if(e.target.name === "email"){
+      setEmail(e.target.value)
+    }
+  }
 
   const handleChange = (event) => {
     setChecked(event.target.checked);
@@ -34,7 +61,16 @@ export default function BasicInfo({user}) {
 
     }
     x()
-  }, [user])
+  }, [user, x])
+
+  const handleEditInfo = () => {
+    const data = {
+      name: name,
+      lastName: lastName,
+      email: email
+    }
+    onSave(data)
+  }
 
   const handleConfirmAddress = async () => {
     try {
@@ -92,7 +128,7 @@ export default function BasicInfo({user}) {
                 First Name
               </SoftTypography>
             </SoftBox>
-            <SoftInput type="text" placeholder={user.name}/>
+            <SoftInput name="name" type="text" placeholder={user.name} onChange={handleFormChange2}/>
           </SoftBox>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -102,7 +138,7 @@ export default function BasicInfo({user}) {
                 Last Name
               </SoftTypography>
             </SoftBox>
-            <SoftInput type="text" placeholder={user.lastName} />
+            <SoftInput name="lastName" type="text" placeholder={user.lastName} onChange={handleFormChange2}/>
           </SoftBox>
         </Grid>
       </Grid>
@@ -150,7 +186,7 @@ export default function BasicInfo({user}) {
                       Year
                     </SoftTypography>
                   </SoftBox>
-                  <SoftInput type="text" value={user.dob.year} />
+                  <SoftInput name="year" type="text" value={user.dob.year} />
                 </SoftBox>
               </div>
               <div class="col-sm-4 col-3">
@@ -161,7 +197,7 @@ export default function BasicInfo({user}) {
                       Month
                     </SoftTypography>
                   </SoftBox>
-                  <SoftInput type="text" value={user.dob.month} />
+                  <SoftInput name="month" type="text" value={user.dob.month} />
                 </SoftBox>
               </div>
               <div class="col-sm-3 col-4">
@@ -172,7 +208,7 @@ export default function BasicInfo({user}) {
                       Day
                     </SoftTypography>
                   </SoftBox>
-                  <SoftInput type="text" value={user.dob.day} />
+                  <SoftInput name="day" type="text" value={user.dob.day} />
                 </SoftBox>
               </div>
             </SoftBox>
@@ -186,7 +222,7 @@ export default function BasicInfo({user}) {
                 Email
               </SoftTypography>
             </SoftBox>
-            <SoftInput type="text" placeholder={user.email} />
+            <SoftInput name="email" type="text" placeholder={user.email} onChange={handleFormChange2}/>
           </SoftBox>
         </Grid>
         <Grid item xs={12} md={6}>
@@ -196,12 +232,12 @@ export default function BasicInfo({user}) {
                 Confirmation Email
               </SoftTypography>
             </SoftBox>
-            <SoftInput type="text" placeholder={user.email}  />
+            <SoftInput type="text" placeholder={user.email}/>
           </SoftBox>
         </Grid>
       </Grid>
       <SoftBox my={2}>
-          <SoftButton color="info" onClick={handleConfirmAddress}>
+          <SoftButton color="info" onClick={handleEditInfo}>
             Save Your Changes
           </SoftButton>
         </SoftBox>

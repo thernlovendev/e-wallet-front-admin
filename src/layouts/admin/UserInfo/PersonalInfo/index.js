@@ -31,6 +31,7 @@ import AllUserTransactions from "../AllUserTransactions";
 import Dona from "./Graphics/Dona";
 import CountryTransactions from "layouts/client/financials/components/Account";
 import MasterCard from "examples/Cards/MasterCard";
+import { editProfileInfo } from "apis/request";
 
 
 function PersonalInfo() {
@@ -103,6 +104,18 @@ function PersonalInfo() {
     }
     x()
   }, [id])
+
+  const handleOnSave = (user) => {
+    editProfileInfo(id, user).then(async (user) => {
+      console.log(user)
+      setUser(user)
+      SweetAlert("success", "Good", "Info edited");
+    }).catch(error => {
+      if(error === 404){
+        SweetAlert("warning", "Ooops", "Something went wrong");
+      }
+    })
+  }
 
   return (
     <DashboardLayout>
@@ -227,7 +240,7 @@ function PersonalInfo() {
                 </div>
               */}
               <SoftBox mt={3}>
-                <BasicInfo user={user} />
+                <BasicInfo user={user} onSave={handleOnSave} />
               </SoftBox>
               {/*controller.user.identityVerified ? 
                 <></> : 

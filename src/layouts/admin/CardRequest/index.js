@@ -39,7 +39,6 @@ function CardsRequests() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [requests, setRequests] = useState([{
-    data: {
       id: "",
       request: "",
       state: "",
@@ -47,8 +46,12 @@ function CardsRequests() {
           name: "",
           lastName: "",
           email: ""
+      },
+      date: {
+        day: "",
+        month: "",
+        year: ""
       }
-    }
   }])
   const itemsPerPage = 10;
 
@@ -67,7 +70,9 @@ function CardsRequests() {
     async function getData () {
       getCardRequests().then(async (data) => {
         console.log(data)
-        await setRequests(data);
+        if(data.length > 0){
+          await setRequests(data);
+        }
       }).catch(error => {
         console.log(error)
       })
@@ -115,36 +120,36 @@ function CardsRequests() {
     console.log(requests[0].data)
     const paginatedRequests = paginate(currentPage);
     const rows = paginatedRequests.map((request) => ({
-      action: <Actions id={request.data.id} />,
-      NAME: <AmountField amount={request.data.user.name + " " + request.data.user.lastName} />,
+      action: <Actions id={request.id} />,
+      NAME: <AmountField amount={request.user.name + " " + request.user.lastName} />,
       DESCRIPTION: (
           <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-            {request.data.request}
+            {request.request}
           </SoftTypography>
       ),
       COUNTRY: (
         <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-          {request.data.country}
+          {request.country}
         </SoftTypography>
       ),
       RECEPTIANT: (
           <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-            {request.data.user.email}
+            {request.user.email}
           </SoftTypography>
       ),
       ID: (
           <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-            {request.data.id}
+            {request.id}
           </SoftTypography>
       ),
       DATE: (
           <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-            {request.data.date}
+            {request.date.day + "/" + request.date.month + "/" + request.date.year}
           </SoftTypography>
       ),
       STATE: (
-          <SoftTypography variant="caption" color={request.data.state === "aproved" || request.data.state === "succeeded" ? "success" :request.data.state === "pending" ? "warning" : "error" } fontWeight="medium">
-            {request.data.state}
+          <SoftTypography variant="caption" color={request.state === "aproved" || request.state === "succeeded" ? "success" :request.state === "pending" ? "warning" : "error" } fontWeight="medium">
+            {request.state}
           </SoftTypography>
       ),
     }));

@@ -1,11 +1,23 @@
+import { refoundTransaction } from "apis/request";
+import { SweetAlert } from "apis/sweetAlert";
 import SoftBox from "components/SoftBox";
 import SoftButton from "components/SoftButton";
 import SoftTypography from "components/SoftTypography";
 
 // Soft UI Dashboard React examples
 import TimelineItem from "examples/Timeline/TimelineItem";
+import { useEffect } from "react";
 
-function TimelineDetails() {
+function TimelineDetails({transaction, onSave}) {
+
+    useEffect(() => {
+
+    },[transaction])
+
+    const handleRefound = () => {
+        onSave();
+    }
+
     return (<>
         <SoftBox pt={3} px={3}>
             <SoftTypography variant="h6" fontWeight="medium" textAlign="left">
@@ -17,29 +29,29 @@ function TimelineDetails() {
                 color="dark"
                 icon="notifications"
                 title="Transaction Started"
-                dateTime="22 DEC 7:20 PM"
+                dateTime={transaction.date}
             />
             <TimelineItem
                 color="error"
                 icon="inventory_2"
-                title="Generate transaction id #243598234"
-                dateTime="22 DEC 7:21 AM"
+                title={"Generate transaction id #" + transaction.id}
+                dateTime={transaction.date}
             />
             <TimelineItem
                 color="info"
                 icon="shopping_cart"
                 title="Payment Sent"
-                dateTime="22 DEC 8:10 AM"
+                dateTime={transaction.date}
             />
             <TimelineItem
                 color="success"
                 icon="payment"
                 title="Transaction Completed"
-                dateTime="22 DEC 4:54 PM"
+                dateTime={transaction.date}
             />
-            <SoftButton variant="gradient" color="error">
-                HELP
-            </SoftButton>
+{transaction.action === "charge" || transaction.action === "transfer" ? <SoftButton variant="gradient" color="error" onClick={handleRefound} >
+                Refound
+            </SoftButton> : <></>}
         </SoftBox>
     </>
     );
