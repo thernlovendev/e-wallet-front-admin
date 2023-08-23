@@ -13,19 +13,18 @@ import MiniStatisticsCard from "examples/Cards/StatisticsCards/MiniStatisticsCar
 import { useNavigate } from "react-router-dom";
 
 function AllTransactions() {
-
   const navegate = useNavigate();
   const [columns2, setColumns2] = useState([
-    {name: "AMOUNT", align: "left"},
-    {name: "DESCRIPTION", align: "left"},
+    { name: "AMOUNT", align: "left" },
+    { name: "DESCRIPTION", align: "left" },
     { name: "RECEPTIANT", align: "left" },
     { name: "ID", align: "left" },
     { name: "DATE", align: "left" },
     { name: "STATE", align: "center" },
     { name: "action", align: "center" },
   ]);
-  const [rows2, setRows2] = useState([])
-  const [index, setIndex] = useState(0)
+  const [rows2, setRows2] = useState([]);
+  const [index, setIndex] = useState(0);
   const [withdraws, setWithdraws] = useState(0);
   const [topUps, setTopUps] = useState(0);
   const [transfers, setTransfers] = useState(0);
@@ -35,7 +34,7 @@ function AllTransactions() {
   const [month, setMonth] = useState(0);
   const [currency, setCurrency] = useState(0);
   const itemsPerPage = 20;
-  const [filtredTransaction, setfiltredTransaction] = useState([])
+  const [filtredTransaction, setfiltredTransaction] = useState([]);
 
   function AmountField({ amount }) {
     return (
@@ -49,21 +48,23 @@ function AllTransactions() {
   }
 
   useEffect(() => {
-    async function getData () {
-      getTransactions().then(async (data) => {
-        console.log(data.transactions)
-        await setWithdraws(data.withdraws);
-        await setTopUps(data.topUps);
-        await setTransfers(data.transfers);
-        await setTotalItems(data.transactions.length)
-        await setTransactions(data.transactions)
-        await setfiltredTransaction(data.transactions)
-      }).catch(error => {
-        console.log(error)
-      })
+    async function getData() {
+      getTransactions()
+        .then(async (data) => {
+          console.log(data.transactions);
+          await setWithdraws(data.withdraws);
+          await setTopUps(data.topUps);
+          await setTransfers(data.transfers);
+          await setTotalItems(data.transactions.length);
+          await setTransactions(data.transactions);
+          await setfiltredTransaction(data.transactions);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     getData();
-  }, [])
+  }, []);
 
   /*useEffect(() => {
     async function x () {
@@ -101,67 +102,84 @@ function AllTransactions() {
   }, [controller]);*/
 
   useEffect(() => {
-    async function x () {
+    async function x() {
       const paginatedTransactions = paginate(currentPage);
       const rows = paginatedTransactions.map((transaction) => ({
         action: <Actions id={transaction.id} />,
         AMOUNT: <AmountField amount={transaction.currency + " " + transaction.amount} />,
         DESCRIPTION: (
-            <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-              {transaction.action}
-            </SoftTypography>
+          <SoftTypography variant="caption" color="secondary" fontWeight="medium">
+            {transaction.action}
+          </SoftTypography>
         ),
         RECEPTIANT: (
-            <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-              {transaction.userInteraction}
-            </SoftTypography>
+          <SoftTypography variant="caption" color="secondary" fontWeight="medium">
+            {transaction.userInteraction}
+          </SoftTypography>
         ),
         ID: (
-            <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-              {transaction.id}
-            </SoftTypography>
+          <SoftTypography variant="caption" color="secondary" fontWeight="medium">
+            {transaction.id}
+          </SoftTypography>
         ),
         DATE: (
-            <SoftTypography variant="caption" color="secondary" fontWeight="medium">
-              {transaction.date}
-            </SoftTypography>
+          <SoftTypography variant="caption" color="secondary" fontWeight="medium">
+            {transaction.date}
+          </SoftTypography>
         ),
         STATE: (
-            <SoftTypography variant="caption" color={transaction.status === "success" || transaction.status === "succeeded" ? "success" : "error" } fontWeight="medium">
-              {transaction.status}
-            </SoftTypography>
+          <SoftTypography
+            variant="caption"
+            color={
+              transaction.status === "success" || transaction.status === "succeeded"
+                ? "success"
+                : "error"
+            }
+            fontWeight="medium"
+          >
+            {transaction.status}
+          </SoftTypography>
         ),
       }));
       await setRows2(rows);
     }
     x();
-  }, [currentPage, transactions, month, currency])
+  }, [currentPage, transactions, month, currency]);
 
-  async function handleMonth (e) {
-    if(e.target.name === "month"){
-      await setMonth(e.target.value)
+  async function handleMonth(e) {
+    if (e.target.name === "month") {
+      await setMonth(e.target.value);
     }
-    if(e.target.name === "currency" ){
-      await setCurrency(e.target.value)
+    if (e.target.name === "currency") {
+      await setCurrency(e.target.value);
     }
   }
 
   function paginate(page) {
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    if(month == 0 && currency == 0){
+    if (month == 0 && currency == 0) {
       return transactions.slice(startIndex, endIndex);
     }
-    if(currency != 0 && month != 0){
-      const x = transactions.filter(transaction => transaction.objectDate && transaction.currency == currency && transaction.objectDate.month == month)
+    if (currency != 0 && month != 0) {
+      const x = transactions.filter(
+        (transaction) =>
+          transaction.objectDate &&
+          transaction.currency == currency &&
+          transaction.objectDate.month == month
+      );
       return x.slice(startIndex, endIndex);
     }
-    if(currency != 0){
-      const x = transactions.filter(transaction => transaction.objectDate && transaction.currency == currency)
+    if (currency != 0) {
+      const x = transactions.filter(
+        (transaction) => transaction.objectDate && transaction.currency == currency
+      );
       return x.slice(startIndex, endIndex);
     }
-    if(month != 0){
-      const x = transactions.filter(transaction => transaction.objectDate && transaction.objectDate.month == month)
+    if (month != 0) {
+      const x = transactions.filter(
+        (transaction) => transaction.objectDate && transaction.objectDate.month == month
+      );
       return x.slice(startIndex, endIndex);
     }
   }
@@ -171,7 +189,7 @@ function AllTransactions() {
       setCurrentPage((prevPage) => prevPage - 1);
     }
   }
-  
+
   function goToNextPage() {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     if (currentPage < totalPages) {
@@ -179,69 +197,113 @@ function AllTransactions() {
     }
   }
 
-  function Actions({id}) {
-
+  function Actions({ id }) {
     const seeTransactionDetails = () => {
-      navegate(`/transactionDetails/${id}`)
-    }
+      navegate(`/transactionDetails/${id}`);
+    };
+
+    // currency
+  
 
     return (
       <SoftBox display="flex" gap={2}>
-        <SoftBox onClick={() => {seeTransactionDetails()}}>
+        <SoftBox
+          onClick={() => {
+            seeTransactionDetails();
+          }}
+        >
           <Visibility />
         </SoftBox>
       </SoftBox>
     );
   }
+  const [currencies, setCurrencies] = useState([]);
+  const [selectedCurrency, setSelectedCurrency] = useState("USD");
+
+  useEffect(() => {
+    // Fetch currency data from an API (e.g., Open Exchange Rates)
+    fetch("https://openexchangerates.org/api/currencies.json")
+      .then((response) => response.json())
+      .then((data) => {
+        const currencyList = Object.keys(data).map((currencyCode) => ({
+          code: currencyCode,
+          name: data[currencyCode],
+        }));
+        setCurrencies(currencyList);
+      })
+      .catch((error) => console.error("Error fetching currencies:", error));
+  }, []);
+
+  const handleChange = (event) => {
+    setSelectedCurrency(event.target.value);
+  };
 
   return (
     <DashboardLayout>
       <SoftBox mb={3}>
         <Grid container spacing={3} mb={3} mt={2}>
-            <Grid item xs={12} sm={6} xl={3}>
-              <MiniStatisticsCard
-                title={{ text: "Total Transactions" }}
-                count={transactions.length}
-                percentage={{ color: "success", text: "" }}
-                icon={{ color: "dark", component: "image" }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} xl={3}>
-              <MiniStatisticsCard
-                title={{ text: "Withdraws" }}
-                count={withdraws}
-                percentage={{ color: "success", text: "" }}
-                icon={{ color: "dark", component: "person" }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} xl={3}>
-              <MiniStatisticsCard
-                title={{ text: "Top-Ups" }}
-                count= {topUps}
-                percentage={{ color: "success", text: "" }}
-                icon={{ color: "dark", component: "public" }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} xl={3}>
-              <MiniStatisticsCard
-                title={{ text: "Transfers" }}
-                count= {transfers}
-                percentage={{ color: "error", text: "" }}
-                icon={{ color: "dark", component: "emoji_events" }}
-              />
-            </Grid>
+          <Grid item xs={12} sm={6} xl={3}>
+            <MiniStatisticsCard
+              title={{ text: "Total Transactions" }}
+              count={transactions.length}
+              percentage={{ color: "success", text: "" }}
+              icon={{ color: "dark", component: "image" }}
+            />
           </Grid>
+          <Grid item xs={12} sm={6} xl={3}>
+            <MiniStatisticsCard
+              title={{ text: "Withdraws" }}
+              count={withdraws}
+              percentage={{ color: "success", text: "" }}
+              icon={{ color: "dark", component: "person" }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} xl={3}>
+            <MiniStatisticsCard
+              title={{ text: "Top-Ups" }}
+              count={topUps}
+              percentage={{ color: "success", text: "" }}
+              icon={{ color: "dark", component: "public" }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} xl={3}>
+            <MiniStatisticsCard
+              title={{ text: "Transfers" }}
+              count={transfers}
+              percentage={{ color: "error", text: "" }}
+              icon={{ color: "dark", component: "emoji_events" }}
+            />
+          </Grid>
+        </Grid>
         <Card>
           <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
             <SoftTypography variant="h6">All Transactions</SoftTypography>
-            <SoftBox display="flex" >
-            <select name="currency" onChange={handleMonth} style={{marginRight:"5px"}}>
+            <SoftBox display="flex">
+              {/* <select name="currency" onChange={handleMonth} style={{marginRight:"5px"}}>
                 <option value={0}>All currencys</option>
                 <option value={"USD"}>USD</option>
                 <option value={"EUR"}>EUR</option>
                 <option value={"GBP"}>GBP</option>
+              </select> */}
+              <label htmlFor="currencyDropdown">Select Currency: </label>
+              <select
+                id="currencyDropdown"
+                value={selectedCurrency}
+                onChange={handleChange}
+                style={{
+                  padding: "8px",
+                  borderRadius: "4px",
+                  border: "1px solid #ccc",
+                  fontSize: "16px",
+                }}
+              >
+                {currencies.map((currency) => (
+                  <option key={currency.code} value={currency.code}>
+                    {currency.name} ({currency.code})
+                  </option>
+                ))}
               </select>
-              <select name="month" onChange={handleMonth} style={{marginRight:"5px"}}>
+              <select name="month" onChange={handleMonth} style={{ marginRight: "5px" }}>
                 <option value={0}>All months</option>
                 <option value={1}>Jan</option>
                 <option value={2}>Feb</option>
@@ -259,7 +321,10 @@ function AllTransactions() {
               <Button variant="contained" color="primary" onClick={goToPreviousPage}>
                 Previus Page
               </Button>
-              <SoftTypography mt={1} mr={2} ml={2} variant="h6"> {currentPage} </SoftTypography>
+              <SoftTypography mt={1} mr={2} ml={2} variant="h6">
+                {" "}
+                {currentPage}{" "}
+              </SoftTypography>
               <Button variant="contained" color="secondary" onClick={goToNextPage}>
                 Next Page
               </Button>
@@ -275,10 +340,7 @@ function AllTransactions() {
               },
             }}
           >
-            <Table
-              columns={columns2}
-              rows={rows2.map((item) => ({ ...item }))}
-            />
+            <Table columns={columns2} rows={rows2.map((item) => ({ ...item }))} />
           </SoftBox>
         </Card>
       </SoftBox>

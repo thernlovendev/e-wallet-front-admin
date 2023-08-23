@@ -42,6 +42,8 @@
     "react-flatpickr": ">=3.10.13",
     "react-router-dom": ">=6.3.0",
     "react-scripts": "^5.0.1",
+    "react-select-currency": "^1.0.7",
+    "react-select-currency-2": "^1.0.6",
     "reactstrap": "^9.1.9",
     "stylis": ">=4.1.1",
     "stylis-plugin-rtl": ">=2.1.1",
