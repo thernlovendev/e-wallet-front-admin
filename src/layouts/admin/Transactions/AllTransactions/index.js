@@ -230,6 +230,7 @@ function AllTransactions() {
           name: data[currencyCode],
         }));
         setCurrencies(currencyList);
+        console.log(hlw);
       })
       .catch((error) => console.error("Error fetching currencies:", error));
   }, []);
