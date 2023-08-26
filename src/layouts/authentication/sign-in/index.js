@@ -58,7 +58,7 @@ function SignIn() {
 
   return (
     <CoverLayout
-      title="Welcome back"
+      title="Welcome back to"
       description="Enter your email and password to sign in"
       image={curved9}
     >
